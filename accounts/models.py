@@ -1,5 +1,7 @@
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import PermissionsMixin
 from django.db import models
+from django.utils.safestring import mark_safe
 
 # Create your models here.
 # specifying choices
@@ -50,7 +52,7 @@ class MyUserManager(BaseUserManager):
         return user
 
 
-class User(AbstractBaseUser):
+class User(AbstractBaseUser,PermissionsMixin):
     email = models.EmailField(
         verbose_name='email address',
         max_length=255,
@@ -92,4 +94,9 @@ class User(AbstractBaseUser):
         "Is the user a member of staff?"
         # Simplest possible answer: All admins are staff
         return self.is_admin
+
+    def image_tag(self):
+        return mark_safe('<img src="{}" width="150" height="150" />'.format(self.picture.url))
+
+    image_tag.short_description = 'Image'
 
