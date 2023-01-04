@@ -21,6 +21,3 @@ class OrderAdmin(admin.ModelAdmin):
     search_fields = ('customer',)
     list_display = ['customer', 'restaurant', 'menu', 'date']
 
-@admin.register(Cart)
-class CartAdmin(admin.ModelAdmin):
-    list_display = ['user', 'total_price']

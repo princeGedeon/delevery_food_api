@@ -68,6 +68,8 @@ class User(AbstractBaseUser,PermissionsMixin):
     number_phone=models.CharField(max_length=20)
     latitude = models.FloatField(default=0.0)
     longitude = models.FloatField(default=0.0)
+
+    
     date_created_at=models.DateTimeField(auto_now_add=True)
     date_updated_at=models.DateTimeField(auto_now=True)
 
