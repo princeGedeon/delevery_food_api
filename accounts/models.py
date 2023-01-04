@@ -60,7 +60,7 @@ class User(AbstractBaseUser):
     prenom=models.CharField(max_length=200)
     profile=models.CharField(max_length=25, choices = PROFILES_CHOICES,
         default = 'USER')
-    picture=models.FileField(default="default.png")
+    picture=models.ImageField(default="default.png")
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
     number_phone=models.CharField(max_length=20)

@@ -17,6 +17,8 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from accounts.models import User
 from accounts.serializers import UpdateUserSerializer
 
+from accounts.serializers import UpdateProfilePictureSerializer
+
 
 def get_tokens_for_user(user):
     refresh = RefreshToken.for_user(user)
@@ -140,4 +142,19 @@ class UpdateUserView(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UpdateProfilePictureView(APIView):
+    @swagger_auto_schema(
+        operation_description="Update Profile",
+        request_body=UpdateProfilePictureSerializer
+
+    )
+    def post(self, request):
+        user = request.user
+        serializer = UpdateProfilePictureSerializer(user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"status": "Profile picture updated"})
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

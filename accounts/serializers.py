@@ -36,9 +36,10 @@ class UserLoginSerializer(serializers.ModelSerializer):
         fields=['email',"password"]
 
 class UserProfileSerializer(serializers.ModelSerializer):
+    picture_url = serializers.CharField(source='picture.url', read_only=True)
     class Meta:
         model=User
-        fields=['id',"email","nom","prenom","profile","longitude","latitude","number_phone","picture"]
+        fields=['id',"email","nom","prenom","profile","longitude","latitude","number_phone","picture_url"]
 
 class UserChangePasswordSerializer(serializers.Serializer):
     password=serializers.CharField(max_length=255,style={'input_type':"password"},write_only=True)
@@ -70,7 +71,7 @@ class SendPasswordResetEmailSerializer(serializers.Serializer):
             print('Encoded uuid')
             token=PasswordResetTokenGenerator().make_token(user)
             print("Password Reset Token",token)
-            link="http://localhost:3000/api/user/reset/"+uid+'/'+token
+            link="http://localhost:9000/api/user/reset-password/"+uid+'/'+token
             print("Password Reset Link",link)
             # EMail sen0
             body='Click Following Link to Reset your password '+link
@@ -117,3 +118,8 @@ class UpdateUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['email',"nom","prenom","number_phone","longitude","latitude"]
+
+class UpdateProfilePictureSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['picture']
