@@ -7,6 +7,17 @@ from django.utils.safestring import mark_safe
 
 
 # Create your models here.
+
+# specifying choices
+
+STATUT_CHOICES = (
+    ("EN_COURS", "EN_COURS"),
+    ("ANNULE", "ANNULE"),
+    ("VALIDE","VALIDE"),
+    ("PAYE","PAYE")
+
+)
+
 class Restaurant(models.Model):
     image=models.ImageField(upload_to="restau",default='default.png')
     name = models.CharField(max_length=255)
@@ -45,6 +56,9 @@ class Menu(models.Model):
     created_at=models.DateTimeField(auto_now_add=True)
     date_add=models.DateTimeField(default=datetime.now)
 
+    def __str__(self):
+        return f"Menu {self.name}"
+
     def image_tag(self):
         return mark_safe('<img src="{}" width="150" height="150" />'.format(self.image.url))
 
@@ -52,15 +66,20 @@ class Menu(models.Model):
 
 class Order(models.Model):
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
-    price=models.IntegerField(default=0)
     menu = models.ForeignKey(Menu, on_delete=models.CASCADE)
     quantity=models.IntegerField(default=1)
     customer = models.ForeignKey(User, on_delete=models.CASCADE,null=True)
     date = models.DateTimeField(auto_now_add=True)
+    commentaire=models.TextField(default="")
+    statut=models.CharField(max_length=100,choices=STATUT_CHOICES,default="EN_COURS")
+
+    def __str__(self):
+        return f"Commande-{self.pk} de {self.menu} x {self.quantity} de {self.customer} à {self.date}"
 
 class Cart(models.Model):
     customer = models.OneToOneField(User, on_delete=models.CASCADE, related_name='cart',null=True)
     orders = models.ManyToManyField(Order)
     total_price = models.IntegerField(default=0)
+    statut = models.CharField(max_length=100, choices=STATUT_CHOICES, default="EN_COURS")
 
 

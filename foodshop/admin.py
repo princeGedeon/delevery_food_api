@@ -16,8 +16,8 @@ class MenuAdmin(admin.ModelAdmin):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    ordering = ('-date',)
-    list_filter = ('restaurant',)
+    ordering = ('-date','quantity')
+    list_filter = ('restaurant','statut')
     search_fields = ('customer',)
-    list_display = ['customer', 'restaurant', 'menu', 'date']
+    list_display = ['customer', 'restaurant', 'menu','quantity','date','statut']
 

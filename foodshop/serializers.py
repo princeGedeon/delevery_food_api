@@ -17,9 +17,13 @@ class MenuSerializer(serializers.ModelSerializer):
         fields = ['id', 'restaurant', 'name', 'price','category']
 
 class OrderSerializer(serializers.ModelSerializer):
+    #price=serializers.SerializerMethodField()
     class Meta:
         model = Order
-        fields = ['restaurant', 'menu', 'date','quantity']
+        fields = ['restaurant', 'menu', 'date','quantity','commentaire','statut']
+
+   # def get_price(self):
+    #    return self.price
 
 
 

@@ -3,7 +3,7 @@ from rest_framework import viewsets, generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
-from .models import Category, Menu
+from .models import Category, Menu, Order
 from .permissions import IsHighUser
 from .serializers import CategorySerializer, MenuSerializer, OrderSerializer
 
@@ -19,9 +19,17 @@ class CategoryViewset(ReadOnlyModelViewSet):
 
 
 class MenuViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsHighUser]
+   # permission_classes = [IsHighUser]
     queryset = Menu.objects.all()
     serializer_class = MenuSerializer
+
+class MyOrderViewSet(viewsets.ReadOnlyModelViewSet):
+    permission_classes = [IsAuthenticated]
+    serializer_class = OrderSerializer
+
+    def get_queryset(self):
+        return Order.objects.filter(customer=self.request.user)
+
 
 
 class OrderCreateView(generics.CreateAPIView):
