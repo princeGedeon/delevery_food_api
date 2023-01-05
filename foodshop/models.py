@@ -67,7 +67,7 @@ class Menu(models.Model):
 class Order(models.Model):
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
     menu = models.ForeignKey(Menu, on_delete=models.CASCADE)
-    quantity=models.IntegerField(default=1)
+    quantity=models.PositiveIntegerField(default=1)
     customer = models.ForeignKey(User, on_delete=models.CASCADE,null=True)
     date = models.DateTimeField(auto_now_add=True)
     commentaire=models.TextField(default="")

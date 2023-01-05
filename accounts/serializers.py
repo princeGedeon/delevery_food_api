@@ -35,6 +35,8 @@ class UserLoginSerializer(serializers.ModelSerializer):
         model=User
         fields=['email',"password"]
 
+
+
 class UserProfileSerializer(serializers.ModelSerializer):
     picture_url = serializers.CharField(source='picture.url', read_only=True)
     class Meta:

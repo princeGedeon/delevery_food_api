@@ -4,6 +4,8 @@ from foodshop.models import Restaurant, Menu, Order
 
 from foodshop.models import Category
 
+from accounts.serializers import UserProfileSerializer
+
 
 class RestaurantSerializer(serializers.ModelSerializer):
     class Meta:
@@ -18,9 +20,11 @@ class MenuSerializer(serializers.ModelSerializer):
 
 class OrderSerializer(serializers.ModelSerializer):
     #price=serializers.SerializerMethodField()
+    #customer = UserProfileSerializer(read_only=True)
+    menu = MenuSerializer(read_only=True)
     class Meta:
         model = Order
-        fields = ['restaurant', 'menu', 'date','quantity','commentaire','statut']
+        fields = ['id','restaurant', 'menu','customer','date','quantity','commentaire','statut']
 
    # def get_price(self):
     #    return self.price
@@ -30,6 +34,7 @@ class OrderSerializer(serializers.ModelSerializer):
 
 class CategorySerializer(serializers.ModelSerializer):
     menus = serializers.SerializerMethodField()
+
     class Meta:
         model = Category
         fields = ['id', 'title', 'menus']
@@ -45,3 +50,7 @@ class CategorySerializer(serializers.ModelSerializer):
         serializer = MenuSerializer(queryset, many=True)
         # la propriété '.data' est le rendu de notre serializer que nous retournons ici
         return serializer.data
+
+class ParameterSerializer(serializers.Serializer):
+    product_id=serializers.IntegerField()
+    quantity=serializers.IntegerField()
