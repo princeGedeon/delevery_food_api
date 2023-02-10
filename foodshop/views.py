@@ -48,7 +48,7 @@ class CartViewSet(viewsets.ViewSet):
     permission_classes = [IsAuthenticated]
     def list(self, request):
         user = request.user
-        orders = Order.objects.filter(customer=user,statut='EN_COURS')
+        orders = Order.objects.filter(customer=user.id,statut='EN_COURS')
         print(orders)
         serializer = OrderSerializer(orders, many=True)
         return Response(serializer.data)
@@ -92,3 +92,33 @@ class OrderCreateView(generics.CreateAPIView):
         print(data)
         # crée l'objet Order avec les données du sérializer
         serializer.save()
+
+
+class ProductDetailView(generics.RetrieveAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = Menu.objects.all()
+    serializer_class = MenuSerializer
+
+class OrderUpdateView(generics.UpdateAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+
+class OrderCancelView(generics.DestroyAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+
+
+class CustomerOrderListView(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = OrderSerializer
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_fields = ('customer', 'statut')
+
+    def get_queryset(self):
+        customer_id = self.kwargs['customer_id']
+        return Order.objects.filter(customer=customer_id)
+
+
+
