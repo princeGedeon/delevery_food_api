@@ -17,6 +17,12 @@ STATUT_CHOICES = (
     ("PAYE","PAYE")
 
 )
+class MenuOption(models.Model):
+    name = models.CharField(max_length=255)
+    price = models.IntegerField(default=0)
+
+    def __str__(self):
+        return f"Options <{self.name}> - {self.price} "
 
 class Restaurant(models.Model):
     image=models.ImageField(upload_to="restau",default='default.png')
@@ -52,9 +58,15 @@ class Menu(models.Model):
     image=models.ImageField(default="default_2.jpg",upload_to="menu_pictures")
     description=models.TextField(default='')
     category=models.ForeignKey(Category,on_delete=models.CASCADE,related_name="menus")
+    options = models.ManyToManyField(MenuOption, through='MenuOptionAssociation')
     active=models.BooleanField(default=True)
     created_at=models.DateTimeField(auto_now_add=True)
     date_add=models.DateTimeField(default=datetime.now)
+
+    @property
+    def get_price_all(self):
+        return  self.price + self.menuoptionassociation_set.aggregate(models.Sum('option__price'))['option__price__sum']
+
 
     def __str__(self):
         return f"Menu {self.name}"
@@ -82,4 +94,8 @@ class Cart(models.Model):
     total_price = models.IntegerField(default=0)
     statut = models.CharField(max_length=100, choices=STATUT_CHOICES, default="EN_COURS")
 
+
+class MenuOptionAssociation(models.Model):
+    menu = models.ForeignKey(Menu, on_delete=models.CASCADE)
+    option = models.ForeignKey(MenuOption, on_delete=models.CASCADE)
 

@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Restaurant, Menu, Order, Cart,Category
+from .models import Restaurant, Menu, Order, Cart, Category, MenuOption, MenuOptionAssociation
+
 
 @admin.register(Restaurant)
 class RestaurantAdmin(admin.ModelAdmin):
@@ -8,8 +9,17 @@ class RestaurantAdmin(admin.ModelAdmin):
 class Category(admin.ModelAdmin):
     list_display = ['title', 'description',]
 
+
+class MenuOptionAssociationInline(admin.TabularInline):
+    model = MenuOptionAssociation
+
+@admin.register(MenuOption)
+class MenuOptionAdmin(admin.ModelAdmin):
+    list_display = ('name', 'price',)
+
 @admin.register(Menu)
 class MenuAdmin(admin.ModelAdmin):
+    inlines = [MenuOptionAssociationInline]
     list_filter = ('restaurant',)
     ordering = ('price','name')
     list_display = ['name', 'restaurant', 'price','image_tag']
